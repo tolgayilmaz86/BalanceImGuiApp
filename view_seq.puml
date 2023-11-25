@@ -1,0 +1,47 @@
+@startuml RenderSystem
+
+actor User
+
+participant "MainMenu" as MainMenu
+participant "IWindow" as IWindow
+participant "OpenGLWindow" as OpenGLWindow
+
+User -> MainMenu: User interacts with MainMenu
+activate MainMenu
+
+MainMenu -> IWindow: Create MainMenu with IWindow
+activate IWindow
+create IWindow
+MainMenu --> IWindow: Window created
+
+MainMenu -> IWindow: createWindow()
+activate OpenGLWindow
+IWindow -> OpenGLWindow: createWindow()
+activate OpenGLWindow
+
+OpenGLWindow --> IWindow: Window created successfully
+
+MainMenu -> IWindow: startFrame()
+IWindow -> OpenGLWindow: startFrame()
+OpenGLWindow --> IWindow: Frame started
+
+loop isOpen()
+    MainMenu -> IWindow: isOpen()
+    IWindow -> OpenGLWindow: isOpen()
+    OpenGLWindow --> IWindow: Check if window is open
+
+    MainMenu -> IWindow: render()
+    IWindow -> OpenGLWindow: renderWindow()
+    OpenGLWindow --> IWindow: Rendering the window
+
+    MainMenu -> IWindow: endFrame()
+    IWindow -> OpenGLWindow: endFrame()
+    OpenGLWindow --> IWindow: Frame ended
+end
+
+
+deactivate IWindow
+deactivate OpenGLWindow
+deactivate MainMenu
+
+@enduml
