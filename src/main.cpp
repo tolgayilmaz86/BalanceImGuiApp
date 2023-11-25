@@ -1,3 +1,5 @@
+#include <Windows.h>
+
 #include <string>
 
 #include "view/Menu/MainMenu.h"

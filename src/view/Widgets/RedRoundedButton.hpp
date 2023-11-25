@@ -35,11 +35,6 @@ public:
             ImGuiCol_Text,
             ImVec4(1.0f, 0.0f, 0.0f, 1.0f)); // Red color for font
 
-        // Use ImGui::Button with custom size to create a larger button
-        ImGui::PushFont(
-            ImGui::GetIO()
-                .Fonts->Fonts[0]); // Assume the larger font is at index 1
-
         // Set the cursor position to center the button
         ImGui::SetCursorPos(buttonPos);
 
@@ -47,8 +42,6 @@ public:
         {
             // Button action when clicked
         }
-
-        ImGui::PopFont();
 
         // Pop the style variables and colors
         ImGui::PopStyleVar();
