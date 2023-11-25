@@ -2,9 +2,9 @@
 #include "IWindow.h"
 
 #include <GLFW/glfw3.h>
-//#include <imgui_impl_opengl3_loader.h>
+#include <imgui_impl_opengl3_loader.h>
 
-namespace View
+namespace View::WindowSystem
 {
     namespace OpenGL
     {
@@ -12,7 +12,7 @@ namespace View
 
         void glfw_error_callback(int error, const char *description);
 
-        class OpenGLWindow : public View::IWindow
+        class OpenGLWindow : public View::WindowSystem::IWindow
         {
         public:
             OpenGLWindow();

@@ -12,12 +12,12 @@
 class WindowFactory
 {
 public:
-    static std::unique_ptr<View::IWindow> createWindow(
+    static std::unique_ptr<View::WindowSystem::IWindow> createWindow(
         const std::string &backend)
     {
         if (backend == "OpenGL")
         {
-            return std::make_unique<View::OpenGL::OpenGLWindow>();
+            return std::make_unique<View::WindowSystem::OpenGL::OpenGLWindow>();
         }
         else if (backend == "DirectX")
         {
@@ -28,10 +28,10 @@ public:
     }
 };
 
-int WINAPI WinMain(HINSTANCE hInstance,
-                   HINSTANCE hPrevInstance,
-                   LPSTR lpCmdLine,
-                   int nCmdShow)
+int WINAPI WinMain([[maybe_unused]] HINSTANCE hInstance,
+                   [[maybe_unused]] HINSTANCE hPrevInstance,
+                   [[maybe_unused]] LPSTR lpCmdLine,
+                   [[maybe_unused]] int nCmdShow )
 {
     {
         std::string chosenBackend = "OpenGL"; // or "DirectX", etc.

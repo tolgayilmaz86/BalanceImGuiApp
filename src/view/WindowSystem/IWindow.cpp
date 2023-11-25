@@ -1,12 +1,14 @@
 #include "IWindow.h"
 
-View::IWindow::IWindow()
+namespace WS = View::WindowSystem;
+
+WS::IWindow::IWindow()
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGui::StyleColorsDark();
+    ImGui::StyleColorsClassic();
 }
 
-View::IWindow::~IWindow()
+WS::IWindow::~IWindow()
 {
 }

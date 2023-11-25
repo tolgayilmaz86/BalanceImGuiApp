@@ -1,0 +1,56 @@
+@startuml ViewSystem
+
+package "View" {
+
+package "Menu" {
+  class AbstractMenu {
+    -windowSystem: IWindow
+    +create()
+    +render()
+  }
+
+  class MainMenu {
+    -windowSystem: IWindow
+    +create()
+    +render()
+  }
+}
+
+package "WindowSystem" {
+  interface IWindow {
+    + createWindow()
+    + renderWindow()
+    + startFrame()
+    + endFrame()
+    + isOpen()
+  }
+
+  class OpenGLWindow {
+    + createWindow()
+    + renderWindow()
+    + startFrame()
+    + endFrame()
+    + isOpen()
+  }
+
+  class DirectXWindow {
+    + createWindow()
+    + renderWindow()
+    + startFrame()
+    + endFrame()
+    + isOpen()
+  }
+}
+
+class WindowFactory {
+  +createWindow(backend: String): IWindow
+}
+
+AbstractMenu -right-> IWindow
+MainMenu -up-> AbstractMenu
+WindowFactory --> IWindow
+
+IWindow <|.. OpenGLWindow
+IWindow <|.. DirectXWindow
+}
+@enduml

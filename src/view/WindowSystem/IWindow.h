@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <imgui.h>
 
-namespace View
+namespace View::WindowSystem
 {
     constexpr auto WINDOW_WIDTH  = std::int32_t{480};
     constexpr auto WINDOW_HEIGHT = std::int32_t{800};
@@ -23,8 +23,5 @@ namespace View
         virtual void startFrame() = 0;
         virtual void endFrame() = 0;
         virtual bool isOpen() = 0;
-
-    //protected:
-    //    void DrawMainMenu();
     };
 } // namespace View

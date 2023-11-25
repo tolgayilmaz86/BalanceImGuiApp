@@ -12,6 +12,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/)
 
+file(COPY ${PROJECT_SOURCE_DIR}/fonts/Roboto-Medium.ttf DESTINATION ${CMAKE_BINARY_DIR})
+
 option(ENABLE_WARNINGS "Enable to add warnings to a target." ON)
 option(ENABLE_WARNINGS_AS_ERRORS "Enable to treat warnings as errors." OFF)
 option(ENABLE_CLANG_TIDY "Enable to add clang tidy." ON)
@@ -44,7 +46,7 @@ add_executable(${PROJECT_NAME} WIN32
  "src/view/WindowSystem/IWindow.cpp"
  "src/view/WindowSystem/OpenGLWindow.cpp"
  "src/view/WindowSystem/OpenGLWindow.h"
- "src/view/Menu/AbstractMenu.h"
+ "src/view/Menu/AbstractMenu.hpp"
  "src/view/Menu/MainMenu.h"
  "src/view/Menu/MainMenu.cpp")
 
