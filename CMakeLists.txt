@@ -40,10 +40,13 @@ find_package(OpenGL REQUIRED)
 
 add_executable(${PROJECT_NAME} WIN32
  "src/main.cpp"
- "src/view/MainWindow.h"
- "src/view/MainWindow.cpp"
- "src/view/OpenGLWindow.cpp"
- "src/view/OpenGLWindow.h")
+ "src/view/WindowSystem/IWindow.h"
+ "src/view/WindowSystem/IWindow.cpp"
+ "src/view/WindowSystem/OpenGLWindow.cpp"
+ "src/view/WindowSystem/OpenGLWindow.h"
+ "src/view/Menu/AbstractMenu.h"
+ "src/view/Menu/MainMenu.h"
+ "src/view/Menu/MainMenu.cpp")
 
 add_compile_definitions(NOMINMAX)
 
