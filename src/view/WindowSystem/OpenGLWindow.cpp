@@ -28,7 +28,11 @@ WS::OpenGL::OpenGLWindow::OpenGLWindow()
     // and is not constrained by the normal window stacking order.
     glfwWindowHint(GLFW_FLOATING, FALSE);
 
-    //glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
+    // A transparent framebuffer allows you to have windows with transparent or
+    // semi-transparent regions, useful for creating visually interesting effects or
+    // overlaying windows with partial transparency.
+    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
+
     //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // 3.2+ only
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);           // 3.0+ only
 
@@ -56,16 +60,6 @@ void WS::OpenGL::OpenGLWindow::startFrame()
 
 void WS::OpenGL::OpenGLWindow::endFrame()
 {
-    //const auto clear_color =
-    //    ImVec4(186.0F / 255.0F, 73.0F / 255.0F, 73.0F / 255.0F, 1.00f);
-    //glfwGetFramebufferSize(window, &WINDOW_WIDTH, &WINDOW_HEIGHT);
-    //glViewport(0,
-    //           0, WS::WINDOW_WIDTH, WS::WINDOW_HEIGHT);
-    //glClearColor(clear_color.x * clear_color.w,
-    //             clear_color.y * clear_color.w,
-    //             clear_color.z * clear_color.w,
-    //             clear_color.w);
-    //glClear(GL_COLOR_BUFFER_BIT);
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     glfwSwapBuffers(window);
 }
@@ -78,7 +72,7 @@ void WS::OpenGL::OpenGLWindow::createWindow()
 {
 }
 
-bool WS::OpenGL::OpenGLWindow::isOpen()
+inline bool WS::OpenGL::OpenGLWindow::isOpen()
 {
     return !glfwWindowShouldClose(window);
 }

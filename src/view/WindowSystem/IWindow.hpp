@@ -15,8 +15,13 @@ namespace View::WindowSystem
     class IWindow
     {
     public:
-        IWindow();
-        virtual ~IWindow();
+        IWindow()
+        {
+            IMGUI_CHECKVERSION();
+            ImGui::CreateContext();
+            ImGui::StyleColorsClassic();
+        }
+        virtual ~IWindow() = default;
 
         virtual void createWindow() = 0;
         virtual void renderWindow() = 0;

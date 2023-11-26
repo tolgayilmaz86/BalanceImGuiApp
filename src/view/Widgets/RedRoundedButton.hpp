@@ -1,5 +1,5 @@
 #pragma once
-
+#include <SFML/Audio.hpp>
 namespace View::Widget
 {
 
@@ -9,9 +9,13 @@ public:
     RedRoundedButton(const char *label, ImVec2 size = ImVec2(200.0f, 70.0f))
         : label(label), size(size)
     {
+        if (buffer.loadFromFile("start.wav"))
+        {
+            sound.setBuffer(buffer);
+        }
     }
 
-    void Render()
+    bool render()
     {
         // Calculate the position to center the button
         ImVec2 windowSize = ImGui::GetWindowSize();
@@ -40,17 +44,48 @@ public:
 
         if (ImGui::Button("START", size))
         {
-            // Button action when clicked
+            sound.play();
+            isClicked = true;
         }
 
         // Pop the style variables and colors
         ImGui::PopStyleVar();
         ImGui::PopStyleColor(4);
+
+        return isClicked;
+    }
+
+    bool onButtonPressed()
+    {
+        if (!isClicked)
+            return false;
+
+        ImGui::OpenPopup("##Clicked");
+
+        // Check if the popup is open
+        if (ImGui::BeginPopupModal("##Clicked",
+                                   NULL,
+                                   ImGuiWindowFlags_AlwaysAutoResize |
+                                   ImGuiWindowFlags_NoDecoration))
+        {
+            // Render content for the new window
+            ImGui::Text("You clicked the button!");
+            if (ImGui::Button("Close"))
+            {
+                ImGui::CloseCurrentPopup();
+                isClicked = false;
+            }
+            ImGui::EndPopup();
+        }
+        return isClicked;
     }
 
 private:
-    const char *label;
+    bool isClicked = false;
     ImVec2 size;
+    sf::Sound sound;
+    sf::SoundBuffer buffer;
+    const char *label;
 };
 
 } // namespace View::Widget

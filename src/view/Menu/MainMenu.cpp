@@ -38,7 +38,10 @@ void VM::MainMenu::render()
         ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
         ImGui::Begin("###Balance", nullptr, window_flags);
 
-        redButton.Render();
+        if (redButton.render())
+        {
+        }
+        redButton.onButtonPressed();
 
         ImGui::End();
         ImGui::Render();

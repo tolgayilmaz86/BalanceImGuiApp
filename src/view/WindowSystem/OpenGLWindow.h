@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "IWindow.h"
+#include "IWindow.hpp"
 
 #include <GLFW/glfw3.h>
 #include <imgui_impl_opengl3_loader.h>

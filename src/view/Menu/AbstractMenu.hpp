@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-#include "view/WindowSystem/IWindow.h"
+#include "view/WindowSystem/IWindow.hpp"
 
 namespace View::Menu
 {
@@ -23,8 +23,6 @@ namespace View::Menu
 
         virtual void render() = 0;
 
-        virtual ~AbstractMenu()
-        {
-        }
+        virtual ~AbstractMenu() = default;
     };
 } // namespace View
