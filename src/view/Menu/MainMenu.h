@@ -10,5 +10,10 @@ namespace View::Menu
   public:
     MainMenu(std::unique_ptr<WS::IWindow> windowSystem);
     void render() override;
+
+private:
+    void handleMove(ImVec2 &currentPos);
+    void drawTopMenu(bool &quit);
+    void drawTabArea(int &activeTab);
   };
 }
