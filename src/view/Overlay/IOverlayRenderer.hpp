@@ -1,7 +1,7 @@
 #pragma once
 
 #include "view/Menu/AbstractMenu.hpp"
-struct TelemetryData
+struct Data
 {
 };
 
@@ -10,12 +10,13 @@ namespace View::Overlay
 class IOverlayRenderer : public View::Menu::AbstractMenu
 {
 public:
-    virtual void render() = 0;
-    virtual void create() = 0;
-    virtual ~IOverlayRenderer() = default;
-    virtual void setData(const TelemetryData& d) { data = d;}
+  virtual ~IOverlayRenderer() = default;
 
-protected:
-    TelemetryData data;
+  virtual void render() = 0;
+  virtual void create() = 0;
+
+  //Variables
+  Data data;
 };
+
 } // namespace View::Overlay

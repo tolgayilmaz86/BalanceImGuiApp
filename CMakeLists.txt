@@ -13,6 +13,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/)
 
 file(COPY ${PROJECT_SOURCE_DIR}/fonts/Roboto-Medium.ttf DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${PROJECT_SOURCE_DIR}/fonts/fa-solid-900.ttf DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${PROJECT_SOURCE_DIR}/sounds/start.wav DESTINATION ${CMAKE_BINARY_DIR})
 
 option(ENABLE_WARNINGS "Enable to add warnings to a target." ON)
@@ -47,15 +48,16 @@ add_executable(${PROJECT_NAME} WIN32
  "src/view/Menu/AbstractMenu.hpp"
  "src/view/Menu/MainMenu.h"
  "src/view/Menu/MainMenu.cpp"
-"src/view/Overlay/OverlayRenderEngine.hpp"
-"src/view/Overlay/IOverlayRenderer.hpp")
+ "src/view/Overlay/OverlayRenderEngine.hpp"
+ "src/view/Overlay/IOverlayRenderer.hpp"
+ "src/view/Overlay/TimerOverlay.hpp")
 
 add_compile_definitions(NOMINMAX)
 
 target_set_warnings(TARGET ${PROJECT_NAME}
     ENABLE ${ENABLE_WARNINGS}
     AS_ERRORS ${ENABLE_WARNINGS_AS_ERRORS})
-
+    
 target_include_directories(${PROJECT_NAME} PUBLIC src/)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt-header-only)

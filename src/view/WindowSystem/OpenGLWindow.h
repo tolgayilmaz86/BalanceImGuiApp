@@ -6,27 +6,32 @@
 
 namespace View::WindowSystem
 {
-    namespace OpenGL
+  // Platform-specific implementations
+  namespace OpenGL
+  {
+    constexpr auto GL_VERSION_330 = "#version 330";
+
+    void glfw_error_callback(int error, const char *description);
+
+    class OpenGLWindow : public IWindow
     {
-        constexpr auto gl_version = "#version 330";
+    public:
+       OpenGLWindow();
+      ~OpenGLWindow();
 
-        void glfw_error_callback(int error, const char *description);
+      bool isOpen() override;
+      ImVec2 GetWindowSize() override;
+      ImVec2 GetWindowPos() override;
+      void SetWindowPos(ImVec2 pos) override;
 
-        class OpenGLWindow : public View::WindowSystem::IWindow
-        {
-        public:
-            OpenGLWindow();
-            ~OpenGLWindow();
+    protected:
+      void endFrame() override;
+      void startFrame() override;
 
-            void renderWindow() override;
-            void createWindow() override;
-            bool isOpen() override;
+      // Variables
+      GLFWwindow *window;
+    };
 
-        protected:
-            GLFWwindow *window;
-            void endFrame();
-            void startFrame();
-        };
-    } // namespace OpenGL
+  } // namespace OpenGL
 
 } // namespace View
