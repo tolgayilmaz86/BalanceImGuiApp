@@ -1,7 +1,6 @@
 #include "MainMenu.h"
 #include "view/Widgets/RedRoundedButton.hpp"
 #include "view/Overlay/TimerOverlay.hpp"
-//#include <GLFW/glfw3.h>
 
 namespace VM = View::Menu;
 
@@ -13,17 +12,21 @@ constexpr ImVec4 backgroundColor3 =
     ImVec4(57.0F / 255.0F, 112.0F / 255.0F, 51.0F / 255.0F, 0.90f);
 
 constexpr static auto window_flags =
-    ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse |
-    ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar |
-    ImGuiWindowFlags_NoDocking;
+    ImGuiWindowFlags_NoResize
+  | ImGuiWindowFlags_NoCollapse
+  | ImGuiWindowFlags_NoTitleBar
+  | ImGuiWindowFlags_NoScrollbar
+  | ImGuiWindowFlags_NoDocking;
 
  VM::MainMenu::MainMenu(std::unique_ptr<WS::IWindow> windowSystem)
   : AbstractMenu(std::move(windowSystem))
 {
 }
 
-void VM::MainMenu::render()
+void VM::MainMenu::show()
 {
+  auto windowSystem = getWindowSystem();
+
   ImGui::PushStyleColor(ImGuiCol_WindowBg, backgroundColor);
   ImGui::PushStyleColor(ImGuiCol_Border, backgroundColor);
   ImGui::PushStyleColor(ImGuiCol_BorderShadow, backgroundColor);
@@ -32,6 +35,8 @@ void VM::MainMenu::render()
 
   bool isRunning = true;
   int activeTab = 0;
+
+  View::Overlay::TimerOverlay timer(windowSystem);
 
   while (windowSystem->isOpen() && isRunning)
   {
@@ -74,8 +79,8 @@ void VM::MainMenu::render()
 
     if (redButton.render())
     {
+      timer.render();
     }
-    redButton.onButtonPressed();
 
     // End
     { 

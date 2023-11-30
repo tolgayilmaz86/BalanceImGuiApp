@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Audio.hpp>
 #include "styles/IconsFontAwesome5.h"
+#include "view/Overlay/TimerOverlay.hpp"
 namespace View::Widget
 {
 
@@ -10,11 +11,8 @@ public:
   RedRoundedButton(const char *label, ImVec2 size = ImVec2(200.0f, 70.0f))
     : label(label), size(size)
   {
-    float baseFontSize =
-      48.0f; // 13.0f is the size of the default font. Change to the font size you use.
-    float iconFontSize =
-      baseFontSize * 2.0f /
-      4.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
+    float baseFontSize = 64.0f;
+    float iconFontSize = 24.0f;
 
     // merge in icons from Font Awesome
     static const ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_16_FA, 0};
@@ -58,8 +56,8 @@ public:
     ImGui::PushStyleColor(
       ImGuiCol_Text,
       ImVec4(1.0f, 0.0f, 0.0f, 1.0f)); // Red color for font
-    ImGui::PushFont(customFont);
 
+    ImGui::PushFont(customFont);
     ImGui::SetCursorPos(buttonPos);
     if (ImGui::Button(label, size))
     {
@@ -77,31 +75,6 @@ public:
     ImGui::PopStyleVar();
     ImGui::PopStyleColor(4);
 
-    return isClicked;
-  }
-
-  bool onButtonPressed()
-  {
-    if (!isClicked)
-      return false;
-
-    ImGui::OpenPopup("##Clicked");
-
-    // Check if the popup is open
-    if (ImGui::BeginPopupModal("##Clicked",
-                   NULL,
-                   ImGuiWindowFlags_AlwaysAutoResize |
-                   ImGuiWindowFlags_NoDecoration))
-    {
-      // Render content for the new window
-      ImGui::Text("You clicked the button!");
-      if (ImGui::Button("Close"))
-      {
-        ImGui::CloseCurrentPopup();
-        isClicked = false;
-      }
-      ImGui::EndPopup();
-    }
     return isClicked;
   }
 

@@ -50,7 +50,9 @@ add_executable(${PROJECT_NAME} WIN32
  "src/view/Menu/MainMenu.cpp"
  "src/view/Overlay/OverlayRenderEngine.hpp"
  "src/view/Overlay/IOverlayRenderer.hpp"
- "src/view/Overlay/TimerOverlay.hpp")
+ "src/view/Overlay/TimerOverlay.hpp"
+ "src/view/WindowSystem/OpenGLWin32Window.h"
+ "src/view/WindowSystem/OpenGLWin32Window.cpp")
 
 add_compile_definitions(NOMINMAX)
 

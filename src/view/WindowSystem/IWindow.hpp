@@ -10,8 +10,8 @@
 
 namespace View::WindowSystem
 {
-  constexpr auto WINDOW_WIDTH = std::int32_t{480};
-  constexpr auto WINDOW_HEIGHT = std::int32_t{800};
+  constexpr auto MENU_WINDOW_WIDTH = std::int32_t{480};
+  constexpr auto MENU_WINDOW_HEIGHT = std::int32_t{800};
 
   class IWindow
   {

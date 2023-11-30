@@ -17,11 +17,13 @@
         {
             "name": "imgui",
             "default-features": false,
-            "features": [
-                "glfw-binding",
-                "opengl3-binding",
-				"docking-experimental"
-            ]
+          "features": [
+            "glfw-binding",
+            "opengl3-binding",
+            "dx12-binding",
+            "win32-binding",
+            "docking-experimental"
+          ]
         },
         {
             "name": "boost-thread"

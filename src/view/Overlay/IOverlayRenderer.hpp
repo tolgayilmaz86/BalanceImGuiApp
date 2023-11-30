@@ -7,13 +7,14 @@ struct Data
 
 namespace View::Overlay
 {
-class IOverlayRenderer : public View::Menu::AbstractMenu
+class IOverlayRenderer
 {
 public:
+    IOverlayRenderer(View::WindowSystem::IWindow* windowSystem)
+        {};
   virtual ~IOverlayRenderer() = default;
 
   virtual void render() = 0;
-  virtual void create() = 0;
 
   //Variables
   Data data;

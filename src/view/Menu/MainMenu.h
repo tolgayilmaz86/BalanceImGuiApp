@@ -9,7 +9,7 @@ namespace View::Menu
   {
   public:
     MainMenu(std::unique_ptr<WS::IWindow> windowSystem);
-    void render() override;
+    void show() override;
 
 private:
     void handleMove(ImVec2 &currentPos);

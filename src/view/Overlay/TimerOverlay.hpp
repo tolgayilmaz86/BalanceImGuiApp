@@ -3,34 +3,57 @@
 
 namespace View::Overlay
 {
-class TimerOverlay : IOverlayRenderer
-{
-public:
-  void render() override
+  class TimerOverlay : IOverlayRenderer
   {
-      RenderDetachedOverlay();
-  }
+  public:
+     TimerOverlay(View::WindowSystem::IWindow* windowSystem)
+          : IOverlayRenderer(windowSystem)
+      {
+      }
 
-  ~TimerOverlay()
-  {
-  }
+    void render() override
+    {
+      static int countdownTime = 25 * 60; // 25 minutes in seconds
+      float currentTime = ImGui::GetTime();
 
-private:
-  void RenderDetachedOverlay()
-  {
-    // Set the position of the detached overlay
-    ImGui::SetNextWindowPos(ImVec2(1000, 100), ImGuiCond_Always);
+      float lastTime = countdownTime - currentTime; // Get the initial time
+      float deltaTime = countdownTime - lastTime;
 
-    // Begin the overlay window
-    ImGui::Begin("Detached Overlay",
-           nullptr,
-           ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
+      int time = std::max(0, countdownTime - static_cast<int>(deltaTime));
+      int minutes = time / 60;
+      int seconds = time % 60;
 
-    // Add content to the overlay
-    ImGui::Text("This is a detached overlay!");
+      lastTime = currentTime;
 
-    // End the overlay window
-    ImGui::End();
-  }
-};
+      ImVec2 viewportSize = ImGui::GetMainViewport()->Size;
+
+      float margin = 10.0f; // Margin from the top-right corner
+      ImVec2 windowPos =
+          ImVec2(viewportSize.x - margin, margin); // Top-right corner
+
+      ImGuiWindowFlags window_flags =
+          ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDecoration |
+          ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize |
+          ImGuiWindowFlags_NoSavedSettings |
+          ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+
+      // Center window
+      ImGui::SetNextWindowPos(ImVec2(1200.f, 0.f),
+                              ImGuiCond_FirstUseEver,
+                              ImVec2(0.5f, 0.5f));
+
+      ImGui::SetNextWindowBgAlpha(0.35f); // Transparent background
+      if (ImGui::Begin("##Timer overlay", nullptr, window_flags))
+      {
+          ImGui::Text("%02d:%02d", minutes, seconds);
+      }
+      ImGui::End();
+    }
+
+    ~TimerOverlay()
+    {
+    }
+
+  private:
+  };
 } // namespace View::Overlay

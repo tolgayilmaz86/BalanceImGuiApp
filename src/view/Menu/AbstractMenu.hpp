@@ -10,13 +10,19 @@ namespace View::Menu
   protected:
     std::unique_ptr<View::WindowSystem::IWindow> windowSystem;
 
+    // Provide access to the underlying WindowSystem instance
+    View::WindowSystem::IWindow *getWindowSystem() const
+    {
+        return windowSystem.get();
+    }
+
   public:
     virtual ~AbstractMenu() = default;
 
-    virtual void render() = 0;
+    virtual void show() = 0;
 
-    AbstractMenu(std::unique_ptr<View::WindowSystem::IWindow> impl)
-      : windowSystem(std::move(impl))
+    AbstractMenu(std::unique_ptr<View::WindowSystem::IWindow> ws)
+      : windowSystem(std::move(ws))
     {
       // Load the Roboto font
       io.Fonts->AddFontFromFileTTF("Roboto-Medium.ttf", 32.0f);

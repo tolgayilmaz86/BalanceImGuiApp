@@ -34,8 +34,8 @@ WS::OpenGL::OpenGLWindow::OpenGLWindow()
   //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
   //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 
-  window = glfwCreateWindow(WS::WINDOW_WIDTH,
-                WS::WINDOW_HEIGHT,
+  window = glfwCreateWindow(WS::MENU_WINDOW_WIDTH,
+                WS::MENU_WINDOW_HEIGHT,
                 "Tomoto",
                 nullptr,
                 nullptr);

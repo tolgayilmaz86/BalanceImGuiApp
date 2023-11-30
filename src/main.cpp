@@ -4,6 +4,7 @@
 
 #include "view/Menu/MainMenu.h"
 #include "view/WindowSystem/OpenGLWindow.h"
+#include "view/WindowSystem/OpenGLWin32Window.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && \
   !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
@@ -21,9 +22,9 @@ public:
     {
       return std::make_unique<View::WindowSystem::OpenGL::OpenGLWindow>();
     }
-    else if (backend == "DirectX")
+    else if (backend == "OpenGL-Win32")
     {
-      //return std::make_unique<View::DirectX::DirectXWindow>();
+      return std::make_unique<View::WindowSystem::OpenGL::OpenGLWin32Window>();
     }
     // Add more backends as needed
     return nullptr; // Or throw an exception for an unsupported backend
@@ -37,7 +38,8 @@ int WINAPI WinMain(
   [[maybe_unused]] int nCmdShow )
 {
   {
-    std::string chosenBackend = "OpenGL"; // or "DirectX", etc.
+    std::string chosenBackend = "OpenGL-Win32";
+    //std::string chosenBackend = "OpenGL";
 
     // RenderSystem represents the directX, OpenGL3
     // or any other defined renderers within the application
@@ -48,7 +50,7 @@ int WINAPI WinMain(
     auto mainMenu =
       std::make_unique<View::Menu::MainMenu>(std::move(renderSystem));
 
-    mainMenu->render();
+    mainMenu->show();
   } // with unique_ptr; rendersystem cleared automatically
 
   return 0;
