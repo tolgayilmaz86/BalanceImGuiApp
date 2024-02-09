@@ -1,14 +1,13 @@
 #pragma once
 #include <SFML/Audio.hpp>
 #include "styles/IconsFontAwesome5.h"
-#include "view/Overlay/TimerOverlay.hpp"
 namespace View::Widget
 {
 
-class RedRoundedButton
+class SideMenuButton
 {
 public:
-  RedRoundedButton(const char *label, ImVec2 size = ImVec2(200.0f, 70.0f))
+    SideMenuButton(const char *label, ImVec2 size = ImVec2(80.0f, 60.0f))
     : label(label), size(size)
   {
     float baseFontSize = 64.0f;
@@ -26,11 +25,7 @@ public:
                    &icons_config,
                    icons_ranges);
 
-    if (buffer.loadFromFile("start.wav"))
-    {
-      sound.setBuffer(buffer);
-    }
-    label = ICON_FA_RUNNING " BETUL";
+    label = ICON_FA_RUNNING;
   }
 
   bool render()
@@ -43,7 +38,7 @@ public:
     // Set up the bigger button with curved corners and red font
     ImGui::PushStyleVar(
       ImGuiStyleVar_FrameRounding,
-      64.0f); // Adjust the rounding value for curved corners
+      4.0f); // Adjust the rounding value for curved corners
     ImGui::PushStyleColor(
       ImGuiCol_Button,
       ImVec4(1.0f, 1.0f, 1.0f, 1.0f)); // White color for button
@@ -61,28 +56,24 @@ public:
     ImGui::SetCursorPos(buttonPos);
     if (ImGui::Button(label, size))
     {
-      sound.play();
       isClicked = true;
       label = ICON_FA_PAUSE " PAUSE";
     }
     else
     {
-      ICON_FA_RUNNING " BETUL";
+      ICON_FA_RUNNING " START";
     }
     ImGui::PopFont();
 
     // Pop the style variables and colors
     ImGui::PopStyleVar();
     ImGui::PopStyleColor(4);
-
     return isClicked;
   }
 
 private:
   bool isClicked = false;
   ImVec2 size;
-  sf::Sound sound;
-  sf::SoundBuffer buffer;
   const char *label;
   ImFont *customFont;
 };

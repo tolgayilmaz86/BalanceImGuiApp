@@ -1,15 +1,28 @@
 #include "MainMenu.h"
 #include "view/Widgets/RedRoundedButton.hpp"
 #include "view/Overlay/TimerOverlay.hpp"
+#include "styles/IconsFontAwesome5.h"
 
 namespace VM = View::Menu;
 
-constexpr ImVec4 backgroundColor =
-    ImVec4(186.0F / 255.0F, 73.0F / 255.0F, 73.0F / 255.0F, 0.90f);
-constexpr ImVec4 backgroundColor2 =
-    ImVec4(125.0F / 255.0F, 83.0F / 255.0F, 162.0F / 255.0F, 0.90f);
-constexpr ImVec4 backgroundColor3 =
-    ImVec4(57.0F / 255.0F, 112.0F / 255.0F, 51.0F / 255.0F, 0.90f);
+constexpr ImVec4 HexToImVec4(const unsigned int hexValue)
+{
+    float r =
+        ((hexValue >> 24) & 0xFF) / 255.0f; // Extract the RR byte and normalize
+    float g =
+        ((hexValue >> 16) & 0xFF) / 255.0f; // Extract the GG byte and normalize
+    float b =
+        ((hexValue >> 8) & 0xFF) / 255.0f; // Extract the BB byte and normalize
+    float a = ((hexValue)&0xFF) / 255.0f;  // Extract the AA byte and normalize
+
+    return ImVec4(r, g, b, a);
+}
+
+constexpr ImVec4 backgroundColor = HexToImVec4(0x3d3d3dFF);
+constexpr ImVec4 backgroundColor2 = HexToImVec4(0x4b4b4bFF);
+constexpr ImVec4 backgroundColor3 = HexToImVec4(0x778ca3FF);
+
+const ImVec4* activeBackGroundColor = &backgroundColor;
 
 constexpr static auto window_flags =
     ImGuiWindowFlags_NoResize
@@ -38,11 +51,12 @@ void VM::MainMenu::show()
 
   View::Overlay::TimerOverlay timer(windowSystem);
 
+  ImVec2 p_min, p_max;
+
   while (windowSystem->isOpen() && isRunning)
   {
     windowSystem->startFrame();
-
-    ImVec2 windowSize = windowSystem->GetWindowSize();
+    ImVec2 windowSize = ImVec2(WS::MENU_WINDOW_WIDTH + 80, WS::MENU_WINDOW_HEIGHT);
     ImVec2 windowPos = windowSystem->GetWindowPos();
 
     handleMove(windowPos);
@@ -51,36 +65,92 @@ void VM::MainMenu::show()
     ImGui::SetNextWindowSize(windowSize);
     ImGui::SetNextWindowPos(windowPos);
 
-    if (activeTab == 1)
+    ImGui::Begin("##BalanceApp", nullptr, window_flags);
+
+    //SideMenu
     {
+      ImGui::BeginChild("##SideMenu", ImVec2(60, WS::MENU_WINDOW_HEIGHT), true);
+
+      ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 64.0f); // round buttons
+      std::string tabNames[] = {ICON_FA_CROSSHAIRS,
+                                ICON_FA_EYE,
+                                ICON_FA_COG,
+                                ICON_FA_SAVE};
+
+      for (int i = 0; i < 4; i++)
+      {
+        std::string it = tabNames[i];
+        ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.15, 0.5));
+        ImGui::PushStyleColor(
+            ImGuiCol_Button,
+           *activeBackGroundColor); // White color for button
+        ImGui::PushStyleColor(
+            ImGuiCol_ButtonHovered,
+            ImVec4(1.f, 0.8f, 0.8f, 1.0f)); // Slightly darker on hover
+        ImGui::PushStyleColor(
+            ImGuiCol_ButtonActive,
+            ImVec4(0.8f, 0.8f, 0.8f, 1.0f)); // Darker when pressed
+        ImGui::PushStyleColor(ImGuiCol_Text,
+                              ImGui::GetStyle().Colors[ImGuiCol_Text]);
+        if (ImGui::Button(it.c_str(), ImVec2(80, 120)))
+        {
+            activeTab = i + 1;
+        }
+        ImGui::Spacing();
+        ImGui::PopStyleVar();
+        ImGui::PopStyleColor(4);
+      }
+      ImGui::PopStyleVar();
+
+      p_min = ImGui::GetWindowPos(); // Top-left
+      p_max = ImVec2(p_min.x + ImGui::GetWindowWidth(),
+                            p_min.y + ImGui::GetWindowHeight()); // Bottom-right
+
+
+      ImGui::EndChild();
+    }
+
+    ImGui::SameLine();
+
+    // Main Window
+    {
+      if (activeTab == 1)
+      {
         ImGui::GetStyle().Colors[ImGuiCol_WindowBg] = backgroundColor2;
         ImGui::GetStyle().Colors[ImGuiCol_Border] = backgroundColor2;
         ImGui::GetStyle().Colors[ImGuiCol_BorderShadow] = backgroundColor2;
-    }
-    else if (activeTab == 2)
-    {
+      }
+      else if (activeTab == 2)
+      {
         ImGui::GetStyle().Colors[ImGuiCol_WindowBg] = backgroundColor3;
         ImGui::GetStyle().Colors[ImGuiCol_Border] = backgroundColor3;
         ImGui::GetStyle().Colors[ImGuiCol_BorderShadow] = backgroundColor3;
-    }
-    else
-    {
+      }
+      else
+      {
         // Revert to the original background color for Tab 1
         ImGui::GetStyle().Colors[ImGuiCol_WindowBg] = backgroundColor;
         ImGui::GetStyle().Colors[ImGuiCol_Border] = backgroundColor;
         ImGui::GetStyle().Colors[ImGuiCol_BorderShadow] = backgroundColor;
+      }
+
+      ImGui::BeginChild("##MainMenu",
+                        ImVec2(WS::MENU_WINDOW_WIDTH, WS::MENU_WINDOW_HEIGHT),
+                        true);
+      drawTopMenu(isRunning);
+
+      drawTabArea();
+
+      if (redButton.render())
+      {
+        timer.render();
+      }
+      ImGui::EndChild();
     }
-
-    ImGui::Begin("##BalanceApp", nullptr, window_flags);
-
-    drawTopMenu(isRunning);
-
-    drawTabArea(activeTab);
-
-    if (redButton.render())
-    {
-      timer.render();
-    }
+    ImDrawList *draw_list = ImGui::GetWindowDrawList();
+    draw_list->AddRectFilled(p_min,
+                             p_max,
+                             IM_COL32(255, 255, 255, 80)); // Fully transparent
 
     // End
     { 
@@ -180,7 +250,7 @@ void View::Menu::MainMenu::drawTopMenu(bool& quit)
   ImGui::SeparatorText("##");
 }
 
-void View::Menu::MainMenu::drawTabArea(int &activeTab)
+void View::Menu::MainMenu::drawTabArea()
 {
 
   // Save the original style to revert back later
@@ -205,7 +275,6 @@ void View::Menu::MainMenu::drawTabArea(int &activeTab)
     ImGui::SetNextItemWidth(tabWidth);
     if (ImGui::BeginTabItem("Tab 1"))
     {
-      activeTab = 0;
       // Content for Tab 1
       ImGui::Text("This is tab 1");
       ImGui::EndTabItem();
@@ -213,7 +282,6 @@ void View::Menu::MainMenu::drawTabArea(int &activeTab)
     ImGui::SetNextItemWidth(tabWidth);
     if (ImGui::BeginTabItem("Tab 2"))
     {
-      activeTab = 1;
       // Content for Tab 2
       ImGui::Text("This is tab 2");
       ImGui::EndTabItem();
@@ -221,7 +289,6 @@ void View::Menu::MainMenu::drawTabArea(int &activeTab)
     ImGui::SetNextItemWidth(tabWidth);
     if (ImGui::BeginTabItem("Tab 3"))
     {
-      activeTab = 2;
       // Content for Tab 3
       ImGui::Text("This is tab 3");
       ImGui::EndTabItem();

@@ -14,6 +14,6 @@ namespace View::Menu
 private:
     void handleMove(ImVec2 &currentPos);
     void drawTopMenu(bool &quit);
-    void drawTabArea(int &activeTab);
+    void drawTabArea();
   };
 }

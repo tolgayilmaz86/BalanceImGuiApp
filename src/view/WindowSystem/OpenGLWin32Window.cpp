@@ -65,71 +65,72 @@ static void Hook_Renderer_SwapBuffers(ImGuiViewport *viewport, void *)
 
 WS::OpenGL::OpenGLWin32Window::OpenGLWin32Window()
 {
-    // Create application window
-    ImGui_ImplWin32_EnableDpiAwareness();
-    WNDCLASSEXW wc = {sizeof(wc),
-                      CS_OWNDC,
-                      WndProc,
-                      0L,
-                      0L,
-                      GetModuleHandle(NULL),
-                      NULL,
-                      NULL,
-                      NULL,
-                      NULL,
-                      L"Tomoto",
-                      NULL};
-    ::RegisterClassExW(&wc);
+  // Create application window
+  ImGui_ImplWin32_EnableDpiAwareness();
+  WNDCLASSEXW wc = {sizeof(wc),
+                    CS_OWNDC,
+                    WndProc,
+                    0L,
+                    0L,
+                    GetModuleHandle(NULL),
+                    NULL,
+                    NULL,
+                    NULL,
+                    NULL,
+                    L"Tomoto",
+                    NULL};
 
-    hwnd = ::CreateWindowExW(WS_EX_LAYERED | WS_EX_TRANSPARENT,
-                            wc.lpszClassName,
-                            L"Tomoto",
-                            WS_OVERLAPPEDWINDOW,
-                            0,
-                            0,
-                            GetSystemMetrics(SM_CXSCREEN),
-                            GetSystemMetrics(SM_CYSCREEN),
-                            NULL,
-                            NULL,
-                            wc.hInstance,
-                            NULL);
+  ::RegisterClassExW(&wc);
 
-    SetLayeredWindowAttributes(hwnd, 0, 0, LWA_ALPHA);
+  hwnd = ::CreateWindowExW(WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW,
+                          wc.lpszClassName,
+                          L"Tomoto",
+                          WS_OVERLAPPEDWINDOW,
+                          0,
+                          0,
+                          GetSystemMetrics(SM_CXSCREEN),
+                          GetSystemMetrics(SM_CYSCREEN),
+                          NULL,
+                          NULL,
+                          wc.hInstance,
+                          NULL);
 
-    // Initialize OpenGL
-    if (!CreateDeviceWGL(hwnd, &g_MainWindow))
-    {
-        CleanupDeviceWGL(hwnd, &g_MainWindow);
-        ::DestroyWindow(hwnd);
-        ::UnregisterClassW(wc.lpszClassName, wc.hInstance);
-        // TODO handle error
-    }
+  SetLayeredWindowAttributes(hwnd, 0, 0, LWA_ALPHA);
 
-    wglMakeCurrent(g_MainWindow.hDC, g_hRC);
+  // Initialize OpenGL
+  if (!CreateDeviceWGL(hwnd, &g_MainWindow))
+  {
+      CleanupDeviceWGL(hwnd, &g_MainWindow);
+      ::DestroyWindow(hwnd);
+      ::UnregisterClassW(wc.lpszClassName, wc.hInstance);
+      // TODO handle error
+  }
 
-    // Show the window
-    ::ShowWindow(hwnd, SW_SHOWDEFAULT);
-    ::UpdateWindow(hwnd);
+  wglMakeCurrent(g_MainWindow.hDC, g_hRC);
 
-    // Setup Platform/Renderer backends
-    ImGui_ImplWin32_InitForOpenGL(hwnd);
-    ImGui_ImplOpenGL3_Init();
+  // Show the window
+  ::ShowWindow(hwnd, SW_SHOWDEFAULT);
+  ::UpdateWindow(hwnd);
 
-    // Win32+GL needs specific hooks for viewport, as there are specific things needed to tie Win32 and GL api.
-    ImGuiIO &io = ImGui::GetIO();
-    (void)io;
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-    {
-        ImGuiPlatformIO &platform_io = ImGui::GetPlatformIO();
-        IM_ASSERT(platform_io.Renderer_CreateWindow == NULL);
-        IM_ASSERT(platform_io.Renderer_DestroyWindow == NULL);
-        IM_ASSERT(platform_io.Renderer_SwapBuffers == NULL);
-        IM_ASSERT(platform_io.Platform_RenderWindow == NULL);
-        platform_io.Renderer_CreateWindow = Hook_Renderer_CreateWindow;
-        platform_io.Renderer_DestroyWindow = Hook_Renderer_DestroyWindow;
-        platform_io.Renderer_SwapBuffers = Hook_Renderer_SwapBuffers;
-        platform_io.Platform_RenderWindow = Hook_Platform_RenderWindow;
-    }
+  // Setup Platform/Renderer backends
+  ImGui_ImplWin32_InitForOpenGL(hwnd);
+  ImGui_ImplOpenGL3_Init();
+
+  // Win32+GL needs specific hooks for viewport, as there are specific things needed to tie Win32 and GL api.
+  ImGuiIO &io = ImGui::GetIO();
+  (void)io;
+  if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+  {
+    ImGuiPlatformIO &platform_io = ImGui::GetPlatformIO();
+    IM_ASSERT(platform_io.Renderer_CreateWindow == NULL);
+    IM_ASSERT(platform_io.Renderer_DestroyWindow == NULL);
+    IM_ASSERT(platform_io.Renderer_SwapBuffers == NULL);
+    IM_ASSERT(platform_io.Platform_RenderWindow == NULL);
+    platform_io.Renderer_CreateWindow = Hook_Renderer_CreateWindow;
+    platform_io.Renderer_DestroyWindow = Hook_Renderer_DestroyWindow;
+    platform_io.Renderer_SwapBuffers = Hook_Renderer_SwapBuffers;
+    platform_io.Platform_RenderWindow = Hook_Platform_RenderWindow;
+  }
 }
 
 WS::OpenGL::OpenGLWin32Window::~OpenGLWin32Window()
@@ -145,10 +146,10 @@ void WS::OpenGL::OpenGLWin32Window::startFrame()
   MSG msg;
   while (::PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
   {
-        ::TranslateMessage(&msg);
-        ::DispatchMessage(&msg);
-        if (msg.message == WM_QUIT)
-            done = true;
+    ::TranslateMessage(&msg);
+    ::DispatchMessage(&msg);
+    if (msg.message == WM_QUIT)
+        done = true;
   }
 
   // Start the Dear ImGui frame
@@ -164,11 +165,11 @@ void WS::OpenGL::OpenGLWin32Window::endFrame()
   // Update and Render additional Platform Windows
   if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
   {
-        ImGui::UpdatePlatformWindows();
-        ImGui::RenderPlatformWindowsDefault();
+    ImGui::UpdatePlatformWindows();
+    ImGui::RenderPlatformWindowsDefault();
 
-        // Restore the OpenGL rendering context to the main window DC, since platform windows might have changed it.
-        wglMakeCurrent(g_MainWindow.hDC, g_hRC);
+    // Restore the OpenGL rendering context to the main window DC, since platform windows might have changed it.
+    wglMakeCurrent(g_MainWindow.hDC, g_hRC);
   }
 
   // Present
